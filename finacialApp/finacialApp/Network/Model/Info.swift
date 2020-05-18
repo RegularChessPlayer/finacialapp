@@ -7,3 +7,14 @@
 //
 
 import Foundation
+
+struct Info: Decodable  {
+    
+    let name: String
+    let data: String
+    
+    enum CodingKeys: String, CodingKey {
+        case name, data
+    }
+    
+}

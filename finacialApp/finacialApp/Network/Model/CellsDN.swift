@@ -7,3 +7,13 @@
 //
 
 import Foundation
+
+struct CellsDN: Decodable {
+    
+    let all: [CellDN]
+
+    enum CodingKeys: String, CodingKey {
+      case all = "cells"
+    }
+    
+}

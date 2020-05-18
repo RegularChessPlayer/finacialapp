@@ -19,9 +19,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         window = UIWindow()
-        let postVC = ViewController()
-        let navController = UINavigationController(rootViewController: postVC)
-        window?.rootViewController = navController
+        let contactVC = ContactViewController()
+        contactVC.tabBarItem = UITabBarItem(tabBarSystemItem: .contacts, tag: 0)
+        let investimentVC = InvestimentViewController()
+        investimentVC.tabBarItem = UITabBarItem(tabBarSystemItem: .featured, tag: 1)
+        let tabBC = UITabBarController()
+        tabBC.viewControllers = [contactVC, investimentVC]
+        window?.rootViewController = tabBC
         window?.makeKeyAndVisible()
         
         return true

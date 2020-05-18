@@ -14,7 +14,7 @@ import UIKit
 
 protocol ContactBusinessLogic
 {
-  func doSomething(request: Contact.Something.Request)
+  func doLoadInitialData(request: Contact.Load.Request)
 }
 
 protocol ContactDataStore
@@ -30,12 +30,16 @@ class ContactInteractor: ContactBusinessLogic, ContactDataStore
   
   // MARK: Do something
   
-  func doSomething(request: Contact.Something.Request)
+  func doLoadInitialData(request: Contact.Load.Request)
   {
     worker = ContactWorker()
-    worker?.doSomeWork()
-    
-    let response = Contact.Something.Response()
-    presenter?.presentSomething(response: response)
+    worker?.fetchCells(completionHandler: { (cells) in
+        let response  = Contact.Load.Response(cells: cells)
+        self.presenter?.presentInitialData(response: response)
+    })
+//    worker?.doSomeWork()
+//
+//    let response = Contact.Load.Response(cells: request)
+//    presenter?.presentSomething(response: response)
   }
 }

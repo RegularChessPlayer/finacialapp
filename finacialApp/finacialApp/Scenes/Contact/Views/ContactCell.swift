@@ -8,12 +8,12 @@
 
 import UIKit
 
-class ContactTableViewCell: UITableViewCell {
+class ContactCell: UITableViewCell {
     
     static let cellIdentifier = "contactCell"
     
     let titleLabel: UILabel
-    let contentLabel: UITextField
+    let contentText: UITextField
     
     private struct ViewTraits {
         static let margin: CGFloat = 16.0
@@ -21,10 +21,10 @@ class ContactTableViewCell: UITableViewCell {
         static let contentFontSize: CGFloat = 12.0
     }
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
            
            titleLabel = UILabel()
-           contentLabel = UILabel()
+           contentText = UITextField()
            
            super.init(style: style, reuseIdentifier: reuseIdentifier)
            
@@ -39,18 +39,18 @@ class ContactTableViewCell: UITableViewCell {
        
        func setupComponents() {
            contentView.addSubviewForAutolayout(titleLabel)
-           contentView.addSubviewForAutolayout(contentLabel)
-           
+           contentView.addSubviewForAutolayout(contentText)
            titleLabel.numberOfLines = 0
-           contentLabel.numberOfLines = 0
-           
+           contentText.delegate = self
            titleLabel.setContentHuggingPriority(UILayoutPriority(rawValue: 1000), for: .vertical)
-           contentLabel.setContentHuggingPriority(UILayoutPriority(rawValue: 999), for: .vertical)
+           contentText.setContentHuggingPriority(UILayoutPriority(rawValue: 999), for: .vertical)
        }
+    
        func setupFonts() {
            titleLabel.font = UIFont.systemFont(ofSize: ViewTraits.titleFontSize, weight: .bold)
-           contentLabel.font = UIFont.systemFont(ofSize: ViewTraits.contentFontSize, weight: .light)
+           contentText.font = UIFont.systemFont(ofSize: ViewTraits.contentFontSize, weight: .light)
        }
+    
        func setupConstraints() {
            NSLayoutConstraint.activate([
                titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,
@@ -62,15 +62,28 @@ class ContactTableViewCell: UITableViewCell {
                ])
            
            NSLayoutConstraint.activate([
-               contentLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,
+               contentText.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,
                                                      constant: ViewTraits.margin),
-               contentLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor,
+               contentText.topAnchor.constraint(equalTo: titleLabel.bottomAnchor,
                                                  constant: ViewTraits.margin),
-               contentLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,
+               contentText.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,
                                                       constant: -ViewTraits.margin),
-               contentLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,
+               contentText.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,
                                                     constant: -ViewTraits.margin)
                ])
        }
 
+}
+
+extension ContactCell: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        print(textField.text)
+    }
+    
 }

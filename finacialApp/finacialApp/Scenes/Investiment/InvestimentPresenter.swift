@@ -26,6 +26,6 @@ class InvestimentPresenter: InvestimentPresentationLogic
   func presentSomething(response: Investiment.Something.Response)
   {
     let viewModel = Investiment.Something.ViewModel()
-    viewController?.displaySomething(viewModel: viewModel)
+    viewController?.displayInitialData(viewModel: viewModel)
   }
 }

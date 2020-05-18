@@ -14,13 +14,15 @@ import UIKit
 
 protocol ContactDisplayLogic: class
 {
-  func displaySomething(viewModel: Contact.Something.ViewModel)
+  func displayInitialData(viewModel: Contact.Load.ViewModel)
 }
 
 class ContactViewController: UIViewController, ContactDisplayLogic
 {
   var interactor: ContactBusinessLogic?
   var router: (NSObjectProtocol & ContactRoutingLogic & ContactDataPassing)?
+  let contactView = ContactView()
+  var cells = [CellDN]()
 
   // MARK: Object lifecycle
   
@@ -38,8 +40,8 @@ class ContactViewController: UIViewController, ContactDisplayLogic
   
   // MARK: Setup
   
-  private func setup()
-  {
+  private func setup() {
+    
     let viewController = self
     let interactor = ContactInteractor()
     let presenter = ContactPresenter()
@@ -50,40 +52,72 @@ class ContactViewController: UIViewController, ContactDisplayLogic
     presenter.viewController = viewController
     router.viewController = viewController
     router.dataStore = interactor
+    
   }
   
   // MARK: Routing
   
-  override func prepare(for segue: UIStoryboardSegue, sender: Any?)
-  {
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    
     if let scene = segue.identifier {
       let selector = NSSelectorFromString("routeTo\(scene)WithSegue:")
       if let router = router, router.responds(to: selector) {
         router.perform(selector, with: segue)
       }
     }
+    
   }
   
   // MARK: View lifecycle
+    
+  override func loadView() {
+    view = contactView
+  }
   
-  override func viewDidLoad()
-  {
+  override func viewDidLoad() {
     super.viewDidLoad()
-    doSomething()
+    contactView.tableView.register(ContactCell.self, forCellReuseIdentifier: ContactCell.cellIdentifier)
+    contactView.tableView.dataSource = self
+    contactView.tableView.delegate = self
+    loadInitialData()
   }
   
   // MARK: Do something
   
   //@IBOutlet weak var nameTextField: UITextField!
   
-  func doSomething()
-  {
-    let request = Contact.Something.Request()
-    interactor?.doSomething(request: request)
+  func loadInitialData() {
+    
+    let request = Contact.Load.Request()
+    interactor?.doLoadInitialData(request: request)
+    
   }
   
-  func displaySomething(viewModel: Contact.Something.ViewModel)
-  {
-    //nameTextField.text = viewModel.name
+  func displayInitialData(viewModel: Contact.Load.ViewModel) {
+    
+    cells = viewModel.cells
+    contactView.tableView.reloadData()
+    
   }
+    
 }
+
+extension ContactViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return cells.count
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: ContactCell.cellIdentifier, for: indexPath) as? ContactCell {
+            
+            let cellDN = cells[indexPath.row]
+            cell.titleLabel.text = cellDN.message
+            cell.textLabel?.text = "\(cellDN.id)"
+            
+            return cell
+        } else {
+            return UITableViewCell()
+        }
+    }
+}
+
+extension ContactViewController: UITableViewDelegate {}

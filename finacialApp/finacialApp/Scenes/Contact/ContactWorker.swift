@@ -14,7 +14,10 @@ import UIKit
 
 class ContactWorker
 {
-  func doSomeWork()
-  {
-  }
+    func fetchCells(completionHandler: @escaping ([CellDN]) -> Void) {
+        NetWorkManager().fetchCells { cells in
+            completionHandler(cells)
+        }
+    }
+    
 }

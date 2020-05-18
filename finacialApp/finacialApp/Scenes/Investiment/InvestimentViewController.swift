@@ -14,7 +14,7 @@ import UIKit
 
 protocol InvestimentDisplayLogic: class
 {
-  func displaySomething(viewModel: Investiment.Something.ViewModel)
+  func displayInitialData(viewModel: Investiment.Something.ViewModel)
 }
 
 class InvestimentViewController: UIViewController, InvestimentDisplayLogic
@@ -50,6 +50,11 @@ class InvestimentViewController: UIViewController, InvestimentDisplayLogic
     presenter.viewController = viewController
     router.viewController = viewController
     router.dataStore = interactor
+    view.backgroundColor = .magenta
+    NetWorkManager().getScreen { (screen) in
+        print(screen)
+    }
+    
   }
   
   // MARK: Routing
@@ -82,7 +87,7 @@ class InvestimentViewController: UIViewController, InvestimentDisplayLogic
     interactor?.doSomething(request: request)
   }
   
-  func displaySomething(viewModel: Investiment.Something.ViewModel)
+  func displayInitialData(viewModel: Investiment.Something.ViewModel)
   {
     //nameTextField.text = viewModel.name
   }

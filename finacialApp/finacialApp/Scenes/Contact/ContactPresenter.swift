@@ -14,7 +14,7 @@ import UIKit
 
 protocol ContactPresentationLogic
 {
-  func presentSomething(response: Contact.Something.Response)
+  func presentInitialData(response: Contact.Load.Response)
 }
 
 class ContactPresenter: ContactPresentationLogic
@@ -23,9 +23,9 @@ class ContactPresenter: ContactPresentationLogic
   
   // MARK: Do something
   
-  func presentSomething(response: Contact.Something.Response)
+  func presentInitialData(response: Contact.Load.Response)
   {
-    let viewModel = Contact.Something.ViewModel()
-    viewController?.displaySomething(viewModel: viewModel)
+    let viewModel = Contact.Load.ViewModel(cells: response.cells)
+    viewController?.displayInitialData(viewModel: viewModel)
   }
 }

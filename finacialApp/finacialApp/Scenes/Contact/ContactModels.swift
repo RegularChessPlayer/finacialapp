@@ -16,16 +16,18 @@ enum Contact
 {
   // MARK: Use cases
   
-  enum Something
+  enum Load
   {
     struct Request
     {
     }
     struct Response
     {
+        let cells: [CellDN]
     }
     struct ViewModel
     {
+        let cells: [CellDN]
     }
   }
 }
